@@ -1,0 +1,27 @@
+{
+  "name": "zr_whatsapp",
+  "version": "1.0.0",
+  "description": "WhatsApp API using wwebjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "nodemon index.js"
+  },
+  "keywords": [
+    "WhatsApp",
+    "Javascript",
+    "Nodejs"
+  ],
+  "author": "ZeroRatenzy",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "http": "^0.0.1-security",
+    "nodemon": "^2.0.22",
+    "qrcode": "^1.5.1",
+    "socket.io": "^4.6.1",
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#fix-buttons-list"
+  }
+}

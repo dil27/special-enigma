@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <title>AP Whazzup!</title>
+</head>
+<body>
+    <div class="header">
+
+    </div>
+    <div id="app">
+        <div class="container">
+            <img src="/assets/img/default_qr.png" alt="QR Code" id="qrcode">
+            <hr>
+            <h4>Logs:</h4>
+            <ul id="logs"></ul>
+        </div>
+    </div>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/socket.io-v4.6.1.js"></script>
+    <script src="/assets/js/app-v1.js"></script>
+    <script>
+        $(document).ready(() => {
+            var socket = io.connect('http://localhost:8000', { path: '/socket.io' });
+
+            socket.on('message', (msg) => {
+                writeLogs.message(msg);
+            });
+
+            socket.on('qr', (qr) => {
+                if ($('#qrcode').attr('src') == '/assets/img/default_qr.png') {
+                    writeLogs.message("Connected.");
+                }
+                $('#qrcode').attr('src', qr);
+            })
+
+            socket.on('chat', (chat) => {
+                var from = chat['from'].replace('@c.us', '');
+                var notifyName = chat['_data']['notifyName'];
+                writeLogs.message(`<i>Incoming Message from: <a class="contact" target="_blank" href="/get-chat/${from}">${notifyName}</a></i>`);
+            })
+
+            socket.on('loading', (chat) => {
+                console.log(chat);
+                writeLogs.status(`(<b style="color: orange; font-family: monospace">${chat.val}%</b>) Loading...`);
+            })
+
+            socket.on('status', (code) => {
+                switch (code) {
+                    case 1001: 
+                        $('#qrcode').attr('src', 'assets/img/default_qr.png');
+                        writeLogs.status(`(<b style="color: orange; font-family: monospace">${code}</b>) Connecting...`);
+                        break;
+                    case 1002: 
+                        $('#qrcode').attr('src', 'assets/img/default_qr_ready.png');
+                        writeLogs.status(`(<b style="color: green; font-family: monospace">${code}</b>) Client is Ready!`);
+                        break;
+                    case 1003: 
+                        $('#qrcode').attr('src', 'assets/img/default_qr_ready.png');
+                        writeLogs.status(`(<b style="color: green; font-family: monospace">${code}</b>) Log in Success.`);
+                        break;
+                }
+            })
+
+
+            const d = new Date();
+            writeLogs = {
+                status: text => {
+                    $('#logs').append($('<li>').html(`<span style="opacity: .75; font-family: monospace;">${d.getHours()}:${d.getMinutes()}</span> | ${text}`));
+                },
+                message: text => {
+                    $('#logs').append($('<li>').html(`<span style="opacity: .75; font-family: monospace;">${d.getHours()}:${d.getMinutes()}</span> | ${text}`));
+                }
+            }
+        })
+    </script>
+</body>
+</html>
