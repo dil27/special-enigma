@@ -21,6 +21,7 @@
     "http": "^0.0.1-security",
     "nodemon": "^2.0.22",
     "qrcode": "^1.5.1",
+    "socket.io": "^4.6.1",
     "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#fix-buttons-list"
   }
 }
